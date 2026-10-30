@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101626">
+  <meta name="description" content="Fourfall is a live two-player Connect Four game. Create a room and play together from anywhere.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Fourfall — Play Together</title>
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Fourfall home">
+        <span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>fourfall<span class="brand-dot">.</span></span>
+      </a>
+      <div class="header-right">
+        <span class="mini-label">TWO PLAYERS · ANYWHERE</span>
+        <span id="connectionBadge" class="connection-badge connecting"><span class="connection-dot"></span><span id="connectionText">Connecting...</span></span>
+      </div>
+    </header>
+
+    <main>
+      <section id="lobbyScreen" class="lobby-layout" aria-label="Create or join a game">
+        <div class="lobby-left">
+          <span class="eyebrow"><span class="eyebrow-line"></span> ONLINE MULTIPLAYER GAME</span>
+          <h1>Good games.<br><span class="gradient-text">Great company.</span></h1>
+          <p class="hero-copy">Challenge a friend to a classic game of Connect Four. One room, two players, a whole lot of friendly competition.</p>
+          <div class="hero-art" aria-hidden="true">
+            <div class="hero-board">
+              <span class="disc purple"></span><span class="disc empty"></span><span class="disc empty"></span><span class="disc empty"></span><span class="disc empty"></span>
+              <span class="disc empty"></span><span class="disc empty"></span><span class="disc gold"></span><span class="disc empty"></span><span class="disc empty"></span>
+              <span class="disc empty"></span><span class="disc purple"></span><span class="disc purple"></span><span class="disc empty"></span><span class="disc empty"></span>
+              <span class="disc gold"></span><span class="disc gold"></span><span class="disc gold"></span><span class="disc gold win"></span><span class="disc purple"></span>
+            </div>
+            <span class="float-label float-top">● YOUR MOVE</span>
+            <span class="float-label float-bottom">✦ CONNECT FOUR TO WIN</span>
+          </div>
+          <div class="hero-points">
+            <span><span class="point-dot"></span> Real-time moves</span>
+            <span><span class="point-dot"></span> Works on phones & computers</span>
+            <span><span class="point-dot"></span> No account required</span>
+          </div>
+        </div>
+
+        <div class="lobby-card">
+          <div class="card-kicker">LET THE GAMES BEGIN</div>
+          <h2>Ready, player one?</h2>
+          <p class="muted">Create a new room or jump into a friend's game.</p>
+          <label for="playerName">YOUR DISPLAY NAME</label>
+          <input id="playerName" class="input" type="text" maxlength="18" autocomplete="nickname" placeholder="e.g. Alex" aria-describedby="lobbyError">
+          <button id="createButton" class="button button-primary" type="button"><span>Create a game</span><span aria-hidden="true">↗</span></button>
+          <div class="or-divider"><span>OR JOIN A FRIEND</span></div>
+          <label for="roomCodeInput">6-CHARACTER ROOM CODE</label>
+          <input id="roomCodeInput" class="input code-input" type="text" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC234">
+          <button id="joinButton" class="button button-outline" type="button">Join room <span aria-hidden="true">→</span></button>
+          <p id="lobbyError" class="form-error" role="alert" aria-live="polite"></p>
+          <div class="card-footnote"><span aria-hidden="true">🔒</span> No signup, no download, just play.</div>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="game-layout" hidden aria-label="Live multiplayer Connect Four">
+        <div class="game-header">
+          <div>
+            <span class="eyebrow"><span class="eyebrow-line"></span> FRIENDLY COMPETITION MODE</span>
+            <h1 class="game-heading">Let's play<span class="brand-dot">.</span></h1>
+            <p class="muted">Take turns dropping your disc. First to connect four wins.</p>
+          </div>
+          <div class="room-actions">
+            <div class="room-tag"><span>ROOM CODE</span><strong id="roomCodeLabel">------</strong></div>
+            <button id="copyInviteButton" class="button button-compact" type="button">⎘ Copy invite link</button>
+          </div>
+        </div>
+
+        <div class="play-columns">
+          <div class="board-column">
+            <div id="gameNotice" class="game-notice" role="status" aria-live="polite">
+              <span id="noticeDot" class="notice-orb"></span>
+              <div><strong id="noticeTitle">Waiting for a friend</strong><p id="noticeDetail">Share the room link to begin.</p></div>
+            </div>
+            <div class="board-frame">
+              <div class="board-topline"><span>THE BOARD</span><span id="roundLabel">ROUND 01</span></div>
+              <div class="drop-row" id="dropButtons" role="group" aria-label="Drop a disc in a column"></div>
+              <div id="board" class="game-board" role="grid" aria-label="Connect Four game board"></div>
+              <div class="board-foot"><span>● GOLD</span><span>FIRST TO FOUR</span><span>● LAVENDER</span></div>
+            </div>
+            <div id="roundActions" class="round-actions" hidden>
+              <button id="rematchButton" class="button button-primary" type="button">Play again <span aria-hidden="true">↻</span></button>
+              <span id="rematchMessage" class="muted"></span>
+            </div>
+          </div>
+
+          <aside class="sidebar">
+            <div class="panel score-panel">
+              <div class="panel-heading"><h2>Players</h2><span class="mini-label">LIVE MATCH</span></div>
+              <div class="player-row player-one">
+                <span class="player-avatar p1">1</span>
+                <div class="player-info"><strong id="playerOneName">Waiting...</strong><span id="playerOneStatus">Player 1 · Gold</span></div>
+                <strong id="scoreOne" class="score">0</strong>
+              </div>
+              <div class="versus">VS</div>
+              <div class="player-row player-two">
+                <span class="player-avatar p2">2</span>
+                <div class="player-info"><strong id="playerTwoName">Waiting...</strong><span id="playerTwoStatus">Player 2 · Lavender</span></div>
+                <strong id="scoreTwo" class="score">0</strong>
+              </div>
+              <div class="draw-count">Draws <strong id="scoreDraws">0</strong></div>
+            </div>
+            <div class="panel how-panel">
+              <div class="panel-heading"><h2>How to play</h2><span class="help-icon">?</span></div>
+              <ol class="rules">
+                <li><span>01</span><p>Send your invite link to a friend on any device.</p></li>
+                <li><span>02</span><p>Take turns selecting a column. Your disc drops to the lowest open space.</p></li>
+                <li><span>03</span><p>Connect four discs horizontally, vertically, or diagonally to win.</p></li>
+              </ol>
+              <p class="keyboard-tip">TIP: Press keys 1–7 to choose a column.</p>
+            </div>
+            <button id="leaveButton" class="button button-leave" type="button">← Leave game</button>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><span>FOURFALL © 2026</span><span>MADE FOR PLAYING TOGETHER, EVEN MILES APART.</span></footer>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
